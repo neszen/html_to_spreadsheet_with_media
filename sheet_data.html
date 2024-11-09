@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets DataTable</title>
+    <link
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        rel="stylesheet"
+    />
+    <link
+        rel="stylesheet"
+        href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h2 class="mb-4">Google Sheets DataTable</h2>
+        <table id="dataTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Gender</th>
+                    <th>Media</th>
+                    <th>Message</th>
+
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Data will be dynamically loaded here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            const webAppUrl = 'https://script.google.com/macros/s/AKfycbwXhJzAjY9oDEQH7_rXqkHLZ_sF7cqyFwwW9IsevCQlDXSia8DaJEKZtHT1j7hPaZo/exec';
+
+            fetch(webAppUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('tableBody');
+                    data.forEach(row => {
+                        let tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${row['name']}</td>
+                            <td>${row['email']}</td>
+                            <td>${row['contact_number']}</td>
+                            <td>${row['gender']}</td>
+                            <td><a href='${row['media']}' target='_blank'>
+                                Open Link
+                            </a></td>
+                            <td>${row['message']}</td>
+                        `;
+                        tableBody.appendChild(tr);
+                    });
+                    $('#dataTable').DataTable();
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+    </script>
+</body>
+</html>
